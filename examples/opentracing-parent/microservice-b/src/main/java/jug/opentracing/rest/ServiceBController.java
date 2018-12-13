@@ -16,8 +16,8 @@
  */
 package jug.opentracing.rest;
 
+import io.opentracing.Span;
 import io.opentracing.Tracer;
-import io.opentracing.contrib.jaxrs2.client.ClientTracingFeature;
 import org.eclipse.microprofile.opentracing.Traced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,32 +25,31 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
 
-@Path("/serviceA")
-public class ServiceAController {
+@Path("/serviceB")
+public class ServiceBController {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceAController.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceBController.class);
 
     @Inject
     private Tracer tracer;
 
-    private Client client = ClientBuilder.newBuilder()
-            .register(ClientTracingFeature.class)
-            .build();
     @GET
-    @Path("/actionA")
-    @Traced(operationName="operationActionA")
+    @Path("/actionB")
+    @Traced(operationName="operationActionB")
     public String actionA(){
 
-        Response response = client.target("http://localhost:8081/service-b/serviceB/actionB")
-                .request()
-                .get();
+        // this span will be ChildOf of span representing server request processing
+        Span childSpan = tracer.buildSpan("businessOperation")
+                .start();
 
-        LOGGER.info("Log at " + ServiceAController.class.getName());
+        LOGGER.info("Log at " + ServiceBController.class.getName());
 
-        return "Action A [" + response.readEntity(String.class) + "]";
+        childSpan.log("Business annotation B");
+
+        // business logic
+        childSpan.finish();
+
+        return "Action B";
     }
 }

@@ -71,7 +71,8 @@
   </pluginRepositories>
 
   <modules>
-    <module>microservice-a</module>
+	  <module>microservice-a</module>
+	  <module>microservice-b</module>
   </modules>
 
   <dependencyManagement>
