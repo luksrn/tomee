@@ -40,6 +40,40 @@
       <groupId>org.apache.tomee</groupId>
       <artifactId>openejb-cxf-rs</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.microprofile.opentracing</groupId>
+      <artifactId>microprofile-opentracing-api</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+
+    <!--https://github.com/opentracing-contrib/java-jaxrs -->
+    <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-jaxrs2-discovery</artifactId>
+      <version>0.3.1</version>
+    </dependency>
+
+    <!--Tracer impl -->
+    <dependency>
+      <groupId>io.opentracing.brave</groupId>
+      <artifactId>brave-opentracing</artifactId>
+      <version>0.33.8</version>
+    </dependency>
+<!--
+    <dependency>
+      <groupId>io.opentracing.brave</groupId>
+      <artifactId>brave-opentracing</artifactId>
+      <version>0.33.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.zipkin.brave</groupId>
+      <artifactId>brave-context-slf4j</artifactId>
+      <version>5.6.0</version>
+    </dependency>
+-->
+
   </dependencies>
 
   <build>

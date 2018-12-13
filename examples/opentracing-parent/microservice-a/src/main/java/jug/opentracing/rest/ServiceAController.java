@@ -16,25 +16,42 @@
  */
 package jug.opentracing.rest;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import org.eclipse.microprofile.opentracing.Traced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 
 @Path("/serviceA")
-@ApplicationScoped
 public class ServiceAController {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ServiceAController.class);
 
+    @Inject
+    Tracer tracer;
+
     @GET
     @Path("/actionA")
-    @Produces({"text/xml", "application/json"})
+    @Traced(operationName="operationActionA")
     public String actionA(){
+
+        System.out.println("Current span = " + tracer.activeSpan());
+
+        // this span will be ChildOf of span representing server request processing
+        Span childSpan = tracer.buildSpan("businessOperation")
+                .start();
+
+        childSpan.log("Business annotation");
+
+        // business logic
+        childSpan.finish();
+
         LOGGER.info("Log at " + ServiceAController.class.getName());
+
         return "Action A";
     }
 }
