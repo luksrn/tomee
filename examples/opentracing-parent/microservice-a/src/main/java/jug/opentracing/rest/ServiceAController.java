@@ -17,7 +17,6 @@
 package jug.opentracing.rest;
 
 import io.opentracing.Tracer;
-import io.opentracing.contrib.jaxrs2.client.ClientTracingFeature;
 import org.eclipse.microprofile.opentracing.Traced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +37,13 @@ public class ServiceAController {
     private Tracer tracer;
 
     private Client client = ClientBuilder.newBuilder()
-            .register(ClientTracingFeature.class)
             .build();
     @GET
     @Path("/actionA")
     @Traced(operationName="operationActionA")
     public String actionA(){
 
-        Response response = client.target("http://localhost:8081/service-b/serviceB/actionB")
+        Response response = client.target("http://localhost:8080/microservice_b_war/serviceB/actionB")
                 .request()
                 .get();
 
