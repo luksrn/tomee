@@ -14,45 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jug.opentracing.rest;
+package jug.opentracing;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.eclipse.microprofile.opentracing.Traced;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-@Path("/serviceA")
-public class FooWebService {
+@Path("/serviceB")
+public class BarWebService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(BarWebService.class);
 
     @Inject
-    private FooBean fooBean;
-
-    @GET
-    @Path("/actionA")
-    @Traced(operationName="operationActionA")
-    public String actionA(){
-        return "Action A {Foo} -> [" + fooBean.callBarService() + "]";
-    }
-
+    private Tracer tracer;
 
     @GET
     @Path("/actionB")
-    @Traced(operationName="operationActionA2")
-    public String actionA2(){
-        return "Action A -> B";
+    @Traced(operationName="operationActionB")
+    public String actionA(){
+
+        Span childSpan = tracer.buildSpan("businessOperation").start();
+
+        LOGGER.info("Log at " + BarWebService.class.getName());
+
+        childSpan.log("Business annotation B");
+
+        // business logic
+        childSpan.finish();
+
+        return "Action B [Bar]";
     }
-
-
-    @Traced(value = false)
-    @GET
-    @Path("/no-trace")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response notTraced() {
-        return Response.ok().build();
-    }
-
 }

@@ -1,4 +1,4 @@
-package jug.opentracing.rest;
+package jug.opentracing;
 
 import javax.ws.rs.ext.Provider;
 

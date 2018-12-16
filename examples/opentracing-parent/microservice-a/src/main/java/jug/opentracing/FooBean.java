@@ -1,4 +1,4 @@
-package jug.opentracing.rest;
+package jug.opentracing;
 
 import org.eclipse.microprofile.opentracing.ClientTracingRegistrar;
 import org.eclipse.microprofile.opentracing.Traced;
