@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/serviceA")
+@Produces("text/plain")
 public class FooWebService {
 
     @Inject
@@ -41,9 +42,9 @@ public class FooWebService {
 
     @GET
     @Path("/actionB")
-    @Traced(operationName="operationActionA2")
+    @Traced
     public String actionA2(){
-        return "Action A -> B";
+        return "Action A2";
     }
 
 

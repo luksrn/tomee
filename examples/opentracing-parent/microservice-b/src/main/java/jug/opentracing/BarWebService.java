@@ -19,18 +19,15 @@ package jug.opentracing;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.eclipse.microprofile.opentracing.Traced;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 @Path("/serviceB")
+@Produces("text/plain")
 public class BarWebService {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(BarWebService.class);
-
     @Inject
     private Tracer tracer;
 
@@ -41,13 +38,12 @@ public class BarWebService {
 
         Span childSpan = tracer.buildSpan("businessOperation").start();
 
-        LOGGER.info("Log at " + BarWebService.class.getName());
-
+        childSpan.setTag("business-tag", "company-X");
         childSpan.log("Business annotation B");
 
         // business logic
         childSpan.finish();
 
-        return "Action B [Bar]";
+        return "Action B {Bar}";
     }
 }
