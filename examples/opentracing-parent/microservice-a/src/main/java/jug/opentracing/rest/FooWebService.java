@@ -16,39 +16,43 @@
  */
 package jug.opentracing.rest;
 
-import io.opentracing.Tracer;
 import org.eclipse.microprofile.opentracing.Traced;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/serviceA")
-public class ServiceAController {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceAController.class);
+public class FooWebService {
 
     @Inject
-    private Tracer tracer;
+    private FooBean fooBean;
 
-    private Client client = ClientBuilder.newBuilder()
-            .build();
     @GET
     @Path("/actionA")
     @Traced(operationName="operationActionA")
     public String actionA(){
-
-        Response response = client.target("http://localhost:8080/microservice_b_war/serviceB/actionB")
-                .request()
-                .get();
-
-        LOGGER.info("Log at " + ServiceAController.class.getName());
-
-        return "Action A [" + response.readEntity(String.class) + "]";
+        return "Action A {Foo} -> [" + fooBean.callBarService() + "]";
     }
+
+
+    @GET
+    @Path("/actionB")
+    @Traced(operationName="operationActionA2")
+    public String actionA2(){
+        return "Action A -> B";
+    }
+
+
+    @Traced(value = false)
+    @GET
+    @Path("/no-trace")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response notTraced() {
+        return Response.ok().build();
+    }
+
 }

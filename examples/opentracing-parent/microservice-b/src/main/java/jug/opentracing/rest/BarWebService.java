@@ -27,9 +27,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 @Path("/serviceB")
-public class ServiceBController {
+public class BarWebService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceBController.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(BarWebService.class);
 
     @Inject
     private Tracer tracer;
@@ -39,17 +39,15 @@ public class ServiceBController {
     @Traced(operationName="operationActionB")
     public String actionA(){
 
-        // this span will be ChildOf of span representing server request processing
-        Span childSpan = tracer.buildSpan("businessOperation")
-                .start();
+        Span childSpan = tracer.buildSpan("businessOperation").start();
 
-        LOGGER.info("Log at " + ServiceBController.class.getName());
+        LOGGER.info("Log at " + BarWebService.class.getName());
 
         childSpan.log("Business annotation B");
 
         // business logic
         childSpan.finish();
 
-        return "Action B";
+        return "Action B [Bar]";
     }
 }
